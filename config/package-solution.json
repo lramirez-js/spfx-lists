@@ -8,18 +8,18 @@
     "skipFeatureDeployment": true,
     "isDomainIsolated": false,
     "developer": {
-      "name": "",
-      "websiteUrl": "",
+      "name": "Luis Ramirez",
+      "websiteUrl": "https://www.linkedin.com/in/luisrg",
       "privacyUrl": "",
       "termsOfUseUrl": "",
       "mpnId": "Undefined-1.19.0"
     },
     "metadata": {
       "shortDescription": {
-        "default": "My Webpart description"
+        "default": "This is a description"
       },
       "longDescription": {
-        "default": "My Webpart description"
+        "default": "This is a description"
       },
       "screenshotPaths": [],
       "videoUrl": "",
