@@ -18,7 +18,7 @@ import {
 } from '@microsoft/sp-http';
 import HelloWorld from './components/HelloWorld';
 import { IHelloWorldProps } from './components/IHelloWorldProps';
-import { ISPLists } from './components/ISPLists';
+import { ISPLists, ISPList } from './components/ISPLists';
 
 export interface IHelloWorldWebPartProps {
   description: string;
@@ -74,7 +74,16 @@ export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorld
       .then((response: SPHttpClientResponse) => {
         return response.json();
       })
-      .catch(() => ({}));
+      .then((data: ISPLists) => {
+        const filteredData: ISPLists = {
+          value: data.value.filter((item: ISPList) => item.Title.toLowerCase().indexOf('test') !== -1)
+        };
+        return filteredData;
+      })
+      .catch((error) => {
+        console.error('Error fetching list data:', error)
+        return { value: [] }
+      });
   }
 
   private _getEnvironmentMessage(): Promise<string> {
