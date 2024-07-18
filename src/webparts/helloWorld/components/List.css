@@ -10,7 +10,6 @@
   position: relative;
 }
 .toggle {
-  color: #fff;
   display: inline-block;
   line-height: 16px;
   font-size: 20px;
@@ -56,7 +55,7 @@ input.toggle:checked ~ .menu {
   position: absolute;
   height: 30px;
   width: 300px;
-  top: 520px;
+  top: 560px;
   left: 0px;
   -webkit-transform: rotateX(90deg) translateY(-15px) translateZ(15px);
     -moz-transform: rotateX(90deg) translateY(-15px) translateZ(15px);
@@ -125,7 +124,7 @@ input.toggle:checked ~ .menu {
   color: #fff;
 }
 .menu .top .search:after {
-  content: '\f002';
+  /* content: '\f002'; */
   font-family: 'FontAwesome';
   font-size: 16px;
   position: absolute;
@@ -237,7 +236,7 @@ input.toggle:checked ~ .menu {
 }
 .menu .middle li:hover:before,
 .menu .middle li:focus:before {
-  content: '\f0da';
+  /* content: '\f0da'; */
   font-family: 'FontAwesome';
   font-size: 16px;
   position: absolute;
@@ -320,4 +319,10 @@ input.toggle:checked ~ .menu .glass-reflection {
   -webkit-box-shadow: inset 0px -40px 150px -50px rgba(255, 255, 255, 0.15);
     -moz-box-shadow: inset 0px -40px 150px -50px rgba(255, 255, 255, 0.15);
           box-shadow: inset 0px -40px 150px -50px rgba(255, 255, 255, 0.15);
+}
+
+.bi-search {
+  left: -35px;
+  position: relative;
+  top: 3px;
 }
