@@ -214,7 +214,8 @@ export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorld
                 }),
                 PropertyPaneTextField('listName', {
                   label: strings.ListNameFieldLabel,
-                  onGetErrorMessage: this.validateListName.bind(this)
+                  onGetErrorMessage: this.validateListName.bind(this),
+                  deferredValidationTime: 500 // default: 200
                 })
               ]
             }
