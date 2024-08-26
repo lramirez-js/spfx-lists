@@ -12,4 +12,5 @@ export interface IHelloWorldProps {
   userDisplayName: string;
   webTitle: string;
   listData: ISPLists;
+  listName: string;
 }

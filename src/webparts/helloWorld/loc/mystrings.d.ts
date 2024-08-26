@@ -11,6 +11,7 @@ declare interface IHelloWorldWebPartStrings {
   AppOfficeEnvironment: string;
   AppOutlookEnvironment: string;
   UnknownEnvironment: string;
+  ListNameFieldLabel: string;
 }
 
 declare module 'HelloWorldWebPartStrings' {

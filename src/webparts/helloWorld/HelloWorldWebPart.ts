@@ -12,13 +12,12 @@ import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 import { IReadonlyTheme } from '@microsoft/sp-component-base';
 
 import * as strings from 'HelloWorldWebPartStrings';
-import {
-  SPHttpClient,
-  SPHttpClientResponse
-} from '@microsoft/sp-http';
 import HelloWorld from './components/HelloWorld';
 import { IHelloWorldProps } from './components/IHelloWorldProps';
 import { ISPLists, ISPList } from './components/ISPLists';
+// This is the API
+import { SPHttpClient, SPHttpClientResponse } from '@microsoft/sp-http';
+import { escape } from '@microsoft/sp-lodash-subset';
 
 export interface IHelloWorldWebPartProps {
   description: string;
@@ -26,6 +25,7 @@ export interface IHelloWorldWebPartProps {
   test1: boolean;
   test2: string;
   test3: boolean;
+  listName: string;
 }
 
 export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorldWebPartProps> {
@@ -33,6 +33,43 @@ export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorld
   private _isDarkTheme: boolean = false;
   private _environmentMessage: string = '';
   private _listData: ISPLists = {value: []};
+
+  private async validateListName(value: string): Promise<string> {
+    if (value === null || value.length === 0) {
+      return "Provide the list name";
+    }
+
+    try {
+      const response = await this.context.spHttpClient.get(
+        this.context.pageContext.web.absoluteUrl +
+          `/_api/web/lists/getByTitle('${escape(value)}')?$select=Id`,
+        SPHttpClient.configurations.v1
+      );
+
+      if (response.ok) {
+        return "";
+      } else if (response.status === 404) {
+        return `List '${escape(value)}' doesn't exist in the current site`;
+      } else {
+        return `Error: ${response.statusText}. Please try again`;
+      }
+    } catch (error) {
+      return error.message;
+    }
+  }
+
+  private validateDescription(value: string): string {
+    if (value === null ||
+      value.trim().length === 0) {
+      return 'Provide a description';
+    }
+
+    if (value.length > 40) {
+      return 'Description should not be longer than 40 characters';
+    }
+
+    return '';
+  }
 
   public render(): void {
     const element: React.ReactElement<IHelloWorldProps> = React.createElement(
@@ -48,7 +85,8 @@ export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorld
         hasTeamsContext: !!this.context.sdks.microsoftTeams,
         userDisplayName: this.context.pageContext.user.displayName,
         webTitle: this.context.pageContext.web.title,
-        listData: this._listData
+        listData: this._listData,
+        listName: this.properties.listName
       }
     );
 
@@ -151,7 +189,8 @@ export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorld
               groupName: strings.BasicGroupName,
               groupFields: [
                 PropertyPaneTextField('description', {
-                  label: strings.DescriptionFieldLabel
+                  label: strings.DescriptionFieldLabel,
+                  onGetErrorMessage: this.validateDescription.bind(this)
                 }),
                 PropertyPaneTextField('test', {
                   label: 'Multi-line Text Field',
@@ -167,12 +206,16 @@ export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorld
                     { key: '2', text: 'Two' },
                     { key: '3', text: 'Three' },
                     { key: '4', text: 'Four' }
-                  ]}),
-                  PropertyPaneToggle('test3', {
-                    label: 'Toggle',
-                    onText: 'On',
-                    offText: 'Off'
-                  }) 
+                ]}),
+                PropertyPaneToggle('test3', {
+                  label: 'Toggle',
+                  onText: 'On',
+                  offText: 'Off'
+                }),
+                PropertyPaneTextField('listName', {
+                  label: strings.ListNameFieldLabel,
+                  onGetErrorMessage: this.validateListName.bind(this)
+                })
               ]
             }
           ]
